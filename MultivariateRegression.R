@@ -142,3 +142,38 @@ predict(model5, newdata, interval="confidence")
 #lets try a value which crosses the boundary, which is not ideal with linear regression
 newdata2 = data.frame(Murder=120.8, HS.Grad=180 , Frost=210)
 predict(model5, newdata2, interval="confidence") 
+
+
+
+
+
+
+
+
+#############Regression in India Population####################################
+
+library(ggplot2)
+library(caret)
+library(splines)
+
+data = read.csv("D:/Work/RWorkSpace/population.csv")
+str(data) # it says in a data frame
+View(data)  #check the data in tabular form
+
+qplot(year,population,color=year,data=data)
+qplot(year,population,color=year,data=data,geom=c("point","smooth"), span=1)
+model_plot = lm(year~population,data=data)
+summary(model_plot)
+##follwing lm is meant for straight line , but out data doesn't suit that
+qplot(year,population,color=year,data=data,geom=c("point","smooth"), method="lm") 
+
+#so spline package will help here
+qplot(year,population,color=year,data=data,geom=c("point","smooth"), method="lm",formula=y ~ ns(x,5))
+
+data$population <- ns(data$population, df=5)
+model_spline <- lm( year ~ population,data=data)
+
+anova(model_plot,model_spline)
+
+##Now we can check the confidence level
+newplotdata = data.frame(year=2002)

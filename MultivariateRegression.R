@@ -102,11 +102,9 @@ summary(model5)
 
 
 ###########Plotting the smooth graph##########################
+#check NonLinearRegression.R
 
-qplot(Life.Exp, Murder +
-        HS.Grad + Frost, data = model5, geom = c("point", "smooth"),
-      method = "lm")
-
+#other example
 
 qplot(Life.Exp,Population + Income + Illiteracy + Murder +
         HS.Grad + Frost, data = model1, geom = c("point", "smooth"),
@@ -118,11 +116,6 @@ res+geom_hline(yintercept=0)
 
 
 ##Isn't it obvious from above .. how good is model5 
-
-
-
-
-
 
 
 
@@ -148,46 +141,5 @@ predict(model5, newdata2, interval="confidence")
 
 
 
-
-
-#############Regression in India Population####################################
-
-#http://www.r-bloggers.com/thats-smooth/
-#http://people.stat.sfu.ca/~cschwarz/Consulting/Trinity/Phase2/TrinityWorkshop/Workshop-handouts/TW-04-Intro-splines.pdf
-
-library(ggplot2)
-library(caret)
-library(splines)
-library(mgcv)
-
-#The sequence of column in CSV does matter the smoot_spline method to work properly
-data = read.csv("/Users/abhishekchoudhary/MachineLearning/pop.csv")
-str(data) # it says in a data frame
-View(data)  #check the data in tabular form
-
-qplot(year,population,color=year,data=data)
-qplot(year,population,color=year,data=data,geom=c("point","smooth"), span=1)
-model_plot = lm(year~population,data=data)
-summary(model_plot)
-##follwing lm is meant for straight line , but out data doesn't suit that
-qplot(year,population,color=year,data=model_plot,geom=c("point","smooth"), method="lm") 
-
-#so spline package will help here
-dat <- gamSim(1,n=150,scale=2)
-
-
-
-model_loess <- loess(formula = data$year ~ data$population, data = data, span = 0.5,
-      degree = 1)
-qplot(year,population,color=year,data=model_loess,geom=c("point","smooth"), method="lm")
-
-
-
-#removing all NA from data
-noNadata <- data[complete.cases(data),]
-model_smooth <- smooth.spline(noNadata$population~noNadata$year,nknots=15)
-##Now we can check the confidence level
-newplotdata <- data.frame(year=1999)
-predict(model_smooth, newplotdata) 
 
 

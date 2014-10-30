@@ -52,11 +52,12 @@ noNadata <- data[complete.cases(data),]
 
 #READ ABOUT KNOTS
 #http://stats.stackexchange.com/questions/7316/setting-knots-in-natural-cubic-splines-in-r
+#I increased it to 50 , because here finally I found an expected output properly
 model_smooth <- smooth.spline(noNadata$population~noNadata$year,nknots=50)
 
 
 qplot(year,population,color=year,data=model_smooth,geom=c("point","smooth"), span=1)
 ##Now we can check the confidence level
-newplotdata <- data.frame(year=2014)
+newplotdata <- data.frame(year=2090)
 predict(model_smooth, newplotdata) 
 

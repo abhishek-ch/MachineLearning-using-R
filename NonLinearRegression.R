@@ -1,6 +1,7 @@
 ##https://seriousstats.wordpress.com/tag/splines/
 library(ggplot2)
 library(GGally)
+library(splines)
 
 data(state)
 View(state.x77)

@@ -1,5 +1,6 @@
 library(ggplot2)
 library(splines)
+library(reshape2)
 
 
 if(Sys.info()["user"] == 'achoudhary'){
@@ -49,4 +50,50 @@ merge(month.dep,month.with,by.x=c("mo","Deposit"),by.y=c("Withdrawal"))
 ggplot(data=month.dep,aes(x=mo,y=Deposit,colour=mo))+geom_line()+geom_point()
 qplot(mo, Deposit,data=month.dep, geom="bar", stat="identity", fill=as.factor(Deposit))
 
-variable <- c(month.dep$Deposit,month.with$Withdrawal)
+#WHY DID I use melt
+#In general, ggplot2 prefers data in long format. In this case, Deposit and Withdrawal 
+#are two categories of currency values. So we use melt to put those two categories 
+#into a single column called variable that ggplot uses for the colour aesthetic, 
+#while the currency values likewise go into a new value column, each value going with 
+#its corresponding category in the variable column
+month.dep.m = melt(month.dep, id.var="mo")
+ggplot(month.dep.m, aes(x=mo, y=value, colour=variable))+ylab("Transactions") +xlab("Month-Wise") +geom_point(aes(size=4.5),shape=21)+
+  geom_line(aes(group=variable),size=1)
+
+
+##############Playing With Prediction#################################
+#Now I wanted to know when I am going to find withdraw for specific deposit
+
+#Now lets play with the model
+
+View(cdata)
+datef <- as.Date(cdata$Transaction.Date, format = "%d/%m/%y")
+model1 <- lm(Withdrawal ~ datef	
+             +Deposit	+Balance,data=cdata)
+
+step(model1)
+#found the required dataset which actually matters
+model2 <- update(model1 ,~.-datef )
+model2 <- lm(Withdrawal ~ Deposit	+Balance,data = cdata)
+
+
+##This plot says poorest kind of data spread so ideally data is not
+#fit for prediction , but even I poked my nose to find something
+#Something is better than nothing
+qplot(Withdrawal, Deposit  +Balance, data = model2, geom = c("point", "smooth"),
+      method = "lm")
+
+qplot(Withdrawal, Deposit  +Balance, data = model2, geom = c("point", "smooth"),
+      method = "lm",formula = y ~ ns(x, 3))
+
+
+###Lets do the test actually
+noNadata <- cdata[complete.cases(cdata),]
+model_smooth <- smooth.spline(noNadata$Withdrawal~ noNadata$Deposit+noNadata$Balance,spar=0.75,nknots=30)
+
+#y.loess <- loess(y ~ x, span=0.75, data.frame(x=noNadata$Withdrawal, y=noNadata$Deposit+noNadata$Balance))
+
+
+newplotdata <- data.frame(Deposit=1800,Balance=351893)
+predict(model_smooth, newplotdata) 
+predict(model2, newplotdata) 

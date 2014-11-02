@@ -97,3 +97,6 @@ model_smooth <- smooth.spline(noNadata$Withdrawal~ noNadata$Deposit+noNadata$Bal
 newplotdata <- data.frame(Deposit=1800,Balance=351893)
 predict(model_smooth, newplotdata) 
 predict(model2, newplotdata) 
+
+#to find the normal distribution of data
+qqPlot(model2,id.n=3)

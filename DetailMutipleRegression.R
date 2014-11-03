@@ -26,6 +26,9 @@ residualPlots(model2, ~ education , fitted=TRUE) #Residuals vs education
 avPlots(model2, id.n=2, id.cex=0.7)
 #read details about plot
 #http://connectmv.com/tutorials/r-tutorial/investigating-outliers-discrepancies-and-other-influential-points/
-qqPlot(model2,id.n=3)
+#http://www.stat.columbia.edu/~martin/W2024/R7.pdf
+
+qqPlot(model2$res,id.n=3)
+hist(model2$res,freq=FALSE)
 influenceIndexPlot(model2,id.n=3)
 influencePlot(model2,id.n=3)

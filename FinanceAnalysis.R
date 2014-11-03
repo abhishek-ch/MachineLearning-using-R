@@ -11,6 +11,7 @@ if(Sys.info()["user"] == 'achoudhary'){
 }
 
 qplot(Deposit,data=data,geom="histogram")
+qplot(population,data=data,geom="histogram")
 
 
 sum(data$Deposit,na.rm = TRUE)
@@ -99,4 +100,5 @@ predict(model2, newplotdata)
 
 #to find the normal distribution of data
 qqPlot(model2,id.n=3)
-hist(model2$res)
+influenceIndexPlot(model2,id.n=3)
+influencePlot(model2,id.n=3)

@@ -1,96 +1,3 @@
-#https://sites.google.com/site/miningtwitter/questions/talking-about/wordclouds/wordcloud1
-#http://www.rdatamining.com/examples/text-mining
-#https://sites.google.com/site/miningtwitter/basics/getting-data/by-twitter
-#http://www.r-bloggers.com/r-text-mining-on-twitter-prayformh370-malaysia-airlines/
-#twitter authentication - http://thinktostart.com/twitter-authentification-with-r/
-#my twitter developer App
-#https://apps.twitter.com/app/6536937/keys
-
-library(devtools)
-#install_github is package of devtools
-install_github("geoffjentry/twitteR", username="geoffjentry")
-library(RCurl)
-library(twitteR)
-library(tm)
-library(wordcloud)
-library(RColorBrewer)
-library(devtools)
-library(stringr)
-
-
-
-reqURL <- "https://api.twitter.com/oauth/request_token"
-accessURL <- "https://api.twitter.com/oauth/access_token"
-authURL <- "https://api.twitter.com/oauth/authorize"
-
-apiKey <-  "MIgAEnO0XHTPKdMv3qiGKr6nu"
-apiSecret <- "CMYO2quM7fUzcVuvx8JjALiKjC9cnpXeJFqQLtv2pnECJCCZKz"
-access_token <- "69009666-XkI1bcxXtE4qXfOtbRYCgkiJJvpCfsmS0fq4OSq9d"
-access_token_secret <- "w89WtxJDAwakPToMqoFtpQYJIfht6YS3a8136hpcyW7eG"
-
-setup_twitter_oauth(apiKey,apiSecret,access_token,access_token_secret)
-
-
-
-
-mach_tweets = searchTwitter("#websummit", n=2000)
-#extract the text from tweets in a vector as R easily understands that
-#laterI will store the same in file so that I could do the analysis in Java/Python  :) 
-#as its easy over there ..hopefully
-mach_text = sapply(mach_tweets, function(x) x$getText())
-#to avoid the error http://stackoverflow.com/questions/9637278/r-tm-package-invalid-input-in-utf8towcs
-mach_text=str_replace_all(mach_text,"[^[:graph:]]", " ") 
-
-#convTweets <- iconv(mach_text, to = "utf-8")
-# create a corpus
-mach_corpus = Corpus(VectorSource(mach_text))
-#tm_map(mach_corpus, function(x) iconv(x, to='UTF-8-MAC', sub='byte'))
-#tm_map(mach_corpus, function(x) iconv(enc2utf8(x), sub = "byte"))
-
-options(mc.cores=2)
-# create document term matrix applying some transformations
-tdm = TermDocumentMatrix(mach_corpus,
-                         control = list(removePunctuation = TRUE,
-                                        stopwords = c("for", "all", "this","your","try","from","its","off",
-                                                      "has","well","are","will","hey","let","the","but",
-                                                      "that","can","make","open","get","out",stopwords("english")),
-                                        removeNumbers = TRUE, tolower = TRUE,
-                                        minWordLength=1)
-                            )
-                         
-                         
-
-
-findFreqTerms(tdm, lowfreq=7)
-findAssocs(tdm, 'awesome', 0.30)
-
-
-# define tdm as matrix
-m = as.matrix(tdm)
-# get word counts in decreasing order
-word_freqs = sort(rowSums(m), decreasing=TRUE) 
-# create a data frame with words and their frequencies
-dm = data.frame(word=names(word_freqs), freq=word_freqs)
-
-
-#http://www.r-bloggers.com/word-cloud-in-r/
-# plot wordcloud
-wordcloud(dm$word, dm$freq, random.order=FALSE, colors=brewer.pal(8, "Dark2"),freq=6)
-pal <- brewer.pal(8, "Dark2")
-pal <- pal[-(1:2)]
-wordcloud(dm$word, dm$freq,scale=c(1,2),min.freq=10,max.words=100, random.order=F, rot.per=.15, colors=pal, vfont=c("sans serif","plain"))
-
-
-# save the image in png format
-png("summit.png", width=12, height=8, units="in", res=300)
-wordcloud(dm$word, dm$freq, random.order=FALSE, colors=brewer.pal(8, "Dark2"))
-dev.off()
-
-
-
-
-
-##################################Sentiment Analysis################################
 #https://sites.google.com/site/miningtwitter/questions/sentiment/sentiment
 #http://stackoverflow.com/questions/15194436/is-there-any-other-package-other-than-sentiment-to-do-sentiment-analysis-in-r
 
@@ -199,7 +106,7 @@ ggplot(sent_df, aes(x=emotion)) +
   scale_fill_brewer(palette="Dark2") +
   labs(x="emotion categories", y="number of tweets") +
   ggtitle("Google Neus 6 Tweets \n(classification by emotion)"
-      )
+  )
 
 
 
@@ -235,4 +142,32 @@ colnames(tdm) = emos
 # comparison word cloud
 comparison.cloud(tdm, colors = brewer.pal(nemo, "Dark2"),
                  scale = c(3,.5), random.order = FALSE, title.size = 1.5)
+
+
+#######################################retweets###########################################
+#http://stackoverflow.com/questions/13649019/with-r-split-time-series-data-into-time-intervals-say-an-hour-and-then-plot-t
+#http://stackoverflow.com/questions/10317470/simple-analog-for-plotting-a-line-from-a-table-object-in-ggplot2
+#find number of retweets
+library(ggplot2)
+
+rdmTweets <- searchTwitter('#websummit', n=500)
+#Create a dataframe based around the results
+df <- do.call("rbind", lapply(rdmTweets, as.data.frame))
+#Here are the columns
+names(df)
+#And some example content
+head(df,3)
+
+
+counts=table(df$retweetCount)
+barplot(counts)
+dev.off()
+#find retweets maximum than 30
+retweetSubset =subset(df,retweetCount > 50)
+qplot(screenName,  data=retweetSubset, geom="bar",weight=retweetCount,fill=screenName)
+
+#time table among each hour
+MyDatesTable <- table(cut(df$created, breaks="10 mins"))
+subset(df,cut(df$created, breaks="10 mins"))
+
 

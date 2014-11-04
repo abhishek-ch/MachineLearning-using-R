@@ -6,7 +6,8 @@
 #my twitter developer App
 #https://apps.twitter.com/app/6536937/keys
 
-
+library(devtools)
+#install_github is package of devtools
 install_github("geoffjentry/twitteR", username="geoffjentry")
 library(RCurl)
 library(twitteR)
@@ -16,8 +17,6 @@ library(RColorBrewer)
 library(devtools)
 library(stringr)
 
-# Set SSL certs globally
-options(RCurlOptions = list(cainfo = system.file("CurlSSL", "cacert.pem", package = "RCurl")))
 
 
 reqURL <- "https://api.twitter.com/oauth/request_token"
@@ -34,7 +33,7 @@ setup_twitter_oauth(apiKey,apiSecret,access_token,access_token_secret)
 
 
 
-mach_tweets = searchTwitter("#websummit", n=1000)
+mach_tweets = searchTwitter("#websummit", n=2000)
 #extract the text from tweets in a vector as R easily understands that
 #laterI will store the same in file so that I could do the analysis in Java/Python  :) 
 #as its easy over there ..hopefully
@@ -54,7 +53,7 @@ tdm = TermDocumentMatrix(mach_corpus,
                          control = list(removePunctuation = TRUE,
                                         stopwords = c("for", "all", "this","your","try","from","its","off",
                                                       "has","well","are","will","hey","let","the","but",
-                                                      "that","out",stopwords("english")),
+                                                      "that","can","make","open","get","out",stopwords("english")),
                                         removeNumbers = TRUE, tolower = TRUE,
                                         minWordLength=1)
                             )
@@ -74,9 +73,13 @@ word_freqs = sort(rowSums(m), decreasing=TRUE)
 dm = data.frame(word=names(word_freqs), freq=word_freqs)
 
 
-
+#http://www.r-bloggers.com/word-cloud-in-r/
 # plot wordcloud
-wordcloud(dm$word, dm$freq, random.order=FALSE, colors=brewer.pal(6, "Dark2"),min.freq=7)
+wordcloud(dm$word, dm$freq, random.order=FALSE, colors=brewer.pal(8, "Dark2"),freq=6)
+pal <- brewer.pal(8, "Dark2")
+pal <- pal[-(1:2)]
+wordcloud(dm$word, dm$freq,scale=c(1,2),min.freq=10,max.words=100, random.order=F, rot.per=.15, colors=pal, vfont=c("sans serif","plain"))
+
 
 # save the image in png format
 png("summit.png", width=12, height=8, units="in", res=300)
@@ -91,12 +94,14 @@ dev.off()
 #https://sites.google.com/site/miningtwitter/questions/sentiment/sentiment
 #http://stackoverflow.com/questions/15194436/is-there-any-other-package-other-than-sentiment-to-do-sentiment-analysis-in-r
 
-install.packages("/Users/abhishekchoudhary/Downloads/Rstem_0.4-1.tar.gz", repos = NULL, type="source")
+install.packages("C:/Users/achoudhary/Downloads/Rstem_0.4-1.zip", repos = NULL, type="source")
+
 install.packages("Rstem", repos = "http://www.omegahat.org/R", type="source")
 download.file("http://cran.r-project.org/src/contrib/Archive/sentiment/sentiment_0.2.tar.gz", "sentiment.tar.gz")
 install.packages("sentiment.tar.gz", repos=NULL, type="source")
-library(twitteR)
 library(sentiment)
+
+library(twitteR)
 library(plyr)
 library(ggplot2)
 library(wordcloud)

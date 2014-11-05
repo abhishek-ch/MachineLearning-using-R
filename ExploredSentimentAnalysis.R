@@ -92,10 +92,10 @@ reqURL <- "https://api.twitter.com/oauth/request_token"
 accessURL <- "https://api.twitter.com/oauth/access_token"
 authURL <- "https://api.twitter.com/oauth/authorize"
 
-apiKey <-  "MIgAEnO0XHTPKdMv3qiGKr6nu"
-apiSecret <- "CMYO2quM7fUzcVuvx8JjALiKjC9cnpXeJFqQLtv2pnECJCCZKz"
-access_token <- "69009666-XkI1bcxXtE4qXfOtbRYCgkiJJvpCfsmS0fq4OSq9d"
-access_token_secret <- "w89WtxJDAwakPToMqoFtpQYJIfht6YS3a8136hpcyW7eG"
+apiKey <-  "************************************"
+apiSecret <- "************************************"
+access_token <- "************************************"
+access_token_secret <- "************************************"
 
 setup_twitter_oauth(apiKey,apiSecret,access_token,access_token_secret)
 
@@ -168,6 +168,8 @@ g3<- ggplot(phone_neg, aes(y=mean_neg)) +
   ggtitle("Average Very Negative Sentiment Score")
 
 
+multiplot(g1, g2, g3, cols=2)
+
 # Multiple plot function
 #
 # ggplot objects can be passed in ..., or to plotlist (as a list of ggplot objects)
@@ -212,3 +214,4 @@ multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
                                       layout.pos.col = matchidx$col))
     }
   }
+}

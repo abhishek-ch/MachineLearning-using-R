@@ -28,30 +28,30 @@ access_token_secret <- "w89WtxJDAwakPToMqoFtpQYJIfht6YS3a8136hpcyW7eG"
 setup_twitter_oauth(apiKey,apiSecret,access_token,access_token_secret)
 
 #fetch tweets
-nexus = searchTwitter("#websummit", n=2500)
+websummit = searchTwitter("#websummit", n=3500)
 
 # get the text
-nexus = sapply(nexus, function(x) x$getText())
+websummit = sapply(websummit, function(x) x$getText())
 #Avoid the non utf-8 characters
-nexus=str_replace_all(nexus,"[^[:graph:]]", " ") 
+websummit=str_replace_all(websummit,"[^[:graph:]]", " ") 
 
 
 #Copy paste of direct cleaning of String
 #based on general
 
 # remove retweet entities
-nexus = gsub("(RT|via)((?:\\b\\W*@\\w+)+)", "", some_txt)
+websummit = gsub("(RT|via)((?:\\b\\W*@\\w+)+)", "", some_txt)
 # remove at people
-nexus = gsub("@\\w+", "", some_txt)
+websummit = gsub("@\\w+", "", some_txt)
 # remove punctuation
-nexus = gsub("[[:punct:]]", "", nexus)
+websummit = gsub("[[:punct:]]", "", websummit)
 # remove numbers
-nexus = gsub("[[:digit:]]", "", nexus)
+websummit = gsub("[[:digit:]]", "", websummit)
 # remove html links
-nexus = gsub("http\\w+", "", nexus)
+websummit = gsub("http\\w+", "", websummit)
 # remove unnecessary spaces
-nexus = gsub("[ \t]{2,}", "", nexus)
-nexus = gsub("^\\s+|\\s+$", "", nexus)
+websummit = gsub("[ \t]{2,}", "", websummit)
+websummit = gsub("^\\s+|\\s+$", "", websummit)
 
 # define "tolower error handling" function 
 try.error = function(x)
@@ -67,31 +67,31 @@ try.error = function(x)
   return(y)
 }
 # lower case using try.error with sapply 
-nexus = sapply(nexus, try.error)
+websummit = sapply(websummit, try.error)
 
 # remove NAs in some_txt
-nexus = nexus[!is.na(nexus)]
-names(nexus) = NULL
+websummit = websummit[!is.na(websummit)]
+names(websummit) = NULL
 
 
 
 
 # classify emotion
-class_emo = classify_emotion(nexus, algorithm="bayes", prior=1.0)
+class_emo = classify_emotion(websummit, algorithm="bayes", prior=1.0)
 # get emotion best fit
 emotion = class_emo[,7]
 # substitute NA's by "unknown"
 emotion[is.na(emotion)] = "unknown"
 
 # classify polarity
-class_pol = classify_polarity(nexus, algorithm="bayes")
+class_pol = classify_polarity(websummit, algorithm="bayes")
 # get polarity best fit
 polarity = class_pol[,4]
 
 
 
 # data frame with results
-sent_df = data.frame(text=nexus, emotion=emotion,
+sent_df = data.frame(text=websummit, emotion=emotion,
                      polarity=polarity, stringsAsFactors=FALSE)
 
 # sort data frame
@@ -105,7 +105,7 @@ ggplot(sent_df, aes(x=emotion)) +
   geom_bar(aes(y=..count.., fill=emotion)) +
   scale_fill_brewer(palette="Dark2") +
   labs(x="emotion categories", y="number of tweets") +
-  ggtitle("Google Neus 6 Tweets \n(classification by emotion)"
+  ggtitle("Google Nexus 6 Tweets \n(classification by emotion)"
   )
 
 
@@ -127,7 +127,7 @@ nemo = length(emos)
 emo.docs = rep("", nemo)
 for (i in 1:nemo)
 {
-  tmp = nexus[emotion == emos[i]]
+  tmp = websummit[emotion == emos[i]]
   emo.docs[i] = paste(tmp, collapse=" ")
 }
 
@@ -152,7 +152,7 @@ library(ggplot2)
 
 rdmTweets <- searchTwitter('#websummit', n=500)
 #Create a dataframe based around the results
-df <- do.call("rbind", lapply(rdmTweets, as.data.frame))
+df <- do.call("rbind", lapply(websummit, as.data.frame))
 #Here are the columns
 names(df)
 #And some example content

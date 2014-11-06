@@ -2,7 +2,6 @@
 #http://stackoverflow.com/questions/15194436/is-there-any-other-package-other-than-sentiment-to-do-sentiment-analysis-in-r
 
 install.packages("C:/Users/achoudhary/Downloads/Rstem_0.4-1.zip", repos = NULL, type="source")
-
 install.packages("Rstem", repos = "http://www.omegahat.org/R", type="source")
 download.file("http://cran.r-project.org/src/contrib/Archive/sentiment/sentiment_0.2.tar.gz", "sentiment.tar.gz")
 install.packages("sentiment.tar.gz", repos=NULL, type="source")
@@ -27,7 +26,7 @@ access_token_secret <- "w89WtxJDAwakPToMqoFtpQYJIfht6YS3a8136hpcyW7eG"
 
 setup_twitter_oauth(apiKey,apiSecret,access_token,access_token_secret)
 
-#fetch tweets
+#fetch tweets with word
 websummit = searchTwitter("#websummit", n=3500)
 
 # get the text
@@ -147,6 +146,7 @@ comparison.cloud(tdm, colors = brewer.pal(nemo, "Dark2"),
 #######################################retweets###########################################
 #http://stackoverflow.com/questions/13649019/with-r-split-time-series-data-into-time-intervals-say-an-hour-and-then-plot-t
 #http://stackoverflow.com/questions/10317470/simple-analog-for-plotting-a-line-from-a-table-object-in-ggplot2
+#http://blog.ouseful.info/2012/02/17/visualising-twitter-user-timeline-activity-in-r/
 #find number of retweets
 library(ggplot2)
 
@@ -166,8 +166,8 @@ dev.off()
 retweetSubset =subset(df,retweetCount > 50)
 qplot(screenName,  data=retweetSubset, geom="bar",weight=retweetCount,fill=screenName)
 
-#time table among each hour
-MyDatesTable <- table(cut(df$created, breaks="10 mins"))
-subset(df,cut(df$created, breaks="10 mins"))
 
+#We can also generate barplots showing the distribution of tweet count over time:
+MyDatesTable <- table(cut(df$created, breaks="10 mins"))
+ggplot(df,aes(x=cut(df$created, breaks="4 mins")))+geom_bar(aes(y = (..count..)))
 

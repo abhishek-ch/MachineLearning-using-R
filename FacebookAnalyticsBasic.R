@@ -58,7 +58,7 @@ library(RCurl)
 library(rjson)
 library(ggplot2)
 
-access_token = "CAACEdEose0cBAPZBzeTZCRHoql1bmEFsHYV45y549aXMKQjK6UEaU9ZBDtOUHJkBmb0JGxyj5KLf5UnpeIrO4WR41etZADKk3ZAKQaopWzOEhdYjxQY8zJBBQFPbgoEfLtuolmBZCf7sFngCgpZC9rCByZBqZC0WRa5DuwK4BvszOWRhQFbbBYyDZAe1lLrUzu4QDsdndfQKCIOz30amz9tbqs"
+access_token = "CAAAASxJZCjyUBADUJeIx4NIKImTlnFmOGbaZAUbJ7iSeKPqseHzkuj97HJBIv0hLDzgmqWt0ZA9bBzLNv7ijL8clsgz4xxp8yz8Jju59qeZBLDDu1JEfnAsiuKsR6eyZA9w9LKil9y2T7mRYILnWi7rVeruaxCRj9rVl8XnyoiH7WfRaE9rEosJZANAoF6gZB0v16N1FuPmPpKHQM2QdBZBA"
 myFB = getUsers("me",token = access_token)
 myFriends = getFriends(access_token, simplify = FALSE)
 
@@ -90,7 +90,7 @@ mainDF <- do.call("rbind", rslist)
 View(mainDF)
 
 #plot the bar chart of all basic details about my account
-g1 <- qplot(relationship_status, data=mainDF, geom="bar", fill=relationship_status)
+g1 <- qplot(relationship_status, data=mainDF, geom="bar", fill=relationship_status)+xlab("Relationship Status")+ggtitle("Relationship Frequency")
 g2 <- qplot(gender, data=mainDF, geom="bar", fill=gender)
 multiplot(g1,g2,cols=1)
 ##Use table to count elements
@@ -101,13 +101,10 @@ mainDF$type <- factor(mainDF$location,
                   levels = c('Bangalore, India', 'Calcutta, India', 'Chennai, Tamil Nadu', 
                              'Hyderabad', 'Mumbai, Maharashtra, India','New Delhi, India','Pune, Maharashtra',
                              'Raipur'))
-qplot(type, data=mainDF, geom="bar", fill=type)
+g3 <- qplot(type, data=mainDF, geom="bar", fill=type)+xlab("Cities having highest no. of ...")+
+  ggtitle("Frequency of Friends in each Cities Around the Globe ")
+multiplot(g1,g2,g3,col=2)
 
-m <- ggplot(mainDF, aes(x=group, y=Freq, fill=type)) 
-m+  geom_bar(position="dodge", stat="identity") + 
-  facet_wrap( ~ plot, scales="free")
-
-qplot(Var1,data=location_sum,weight=Freq,geom="histogram")
 require(v <- ggplot(location_sum, aes(x=location_sum[location_sum$Freq>15,],)) + 
   geom_bar(stat="identity")
 
@@ -129,3 +126,33 @@ plot(my_graph, vertex.size=2,
      edge.arrow.size=0, edge.curved=TRUE,layout=layout.new)
 mtext("layout.fruchterman.reingold, area = vcount^2", side=1)
 dev.off()
+
+
+
+
+
+
+
+###################################FACEBOOK LIKES###################################################
+require(RCurl)
+require(rjson)
+library(Rfacebook)
+# Facebook json function copied from original (Romain Francois) post
+facebook <-  function( path = "me", access_token, options){
+  if( !missing(options) ){
+    options <- sprintf( "?%s", paste( names(options), "=", unlist(options), collapse = "&", sep = "" ) )
+  } else {
+    options <- ""
+  }
+  writeLines(paste("ABHISHE"))
+  print(sprintf( "https://graph.facebook.com/%s%s&access_token=%s", path, options, access_token ))
+  data <- getURL( sprintf( "https://graph.facebook.com/%s%s&access_token=%s", path, options, access_token ) )
+  fromJSON( data )
+}
+
+access_token="CAACEdEose0cBANokcx2EvU35isXQowl9tvQZB29nXfnCqAtQA00IBvfMna3V0qzXke09sZB7ZAihpwzsngSf4slRBnrmGUy2DJF8tEZBszYihu4ZB6zxTZC1LLjOa6BPPQH7TwSZB03iPXPjAZC8qFI7JUz1qq5i1DScmXZCZAEM8Aqexlm41YmFbUtuxPZCLFvND5bLWn6hZAFZADyYddHiZBmrGG"
+fbactivities <- facebook(path="me/friends" , access_token=access_token)
+
+
+
+

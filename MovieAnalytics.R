@@ -26,7 +26,7 @@ sapply(required.packs, function(pack) {
 })
 
 library(RJSONIO)
-source("Graphmultiplot.R")
+source("/Users/abhishekchoudhary/MachineLearning/Graphmultiplot.R")
 #tt <- htmlParse('http://www.omdbapi.com/?t=The+dark+knight&y=&plot=short&r=xml&tomatoes=true')
 #document <- fromJSON('http://www.omdbapi.com/?t=The+dark+knight&y=&plot=short&r=json&tomatoes=true')
 #View(document)
@@ -34,7 +34,7 @@ source("Graphmultiplot.R")
 
 
 
-value <- read.csv("C:/Users/achoudhary/Google Drive/BIG/Python/name_movie.csv")
+value <- read.csv("/Users/abhishekchoudhary/Google Drive/BIG/Python/name_movie.csv")
 View(value)
 View(unique(value))
 
@@ -53,7 +53,7 @@ ggtitle(" Popular Movies Amongs Friends in facebook")
 
 #####Top Movie Likers
 name_table = as.data.frame(table(value$NAME))
-updated_name <- name_table[name_table$Freq>24,]
+updated_name <- name_table[name_table$Freq,]
 View(updated_name)
 #Plot the Most Popular Movies among Friends
 gname <- ggplot(updated_name, aes(x = factor(Var1), y = Freq,fill=Var1)) +
@@ -61,6 +61,11 @@ gname <- ggplot(updated_name, aes(x = factor(Var1), y = Freq,fill=Var1)) +
   labs(x="Movies Like by fb Friends", y="Movie Occurances")+
   ggtitle(" Popular Movies Amongs Friends in facebook")
 
-
+auto <- c(name_table$Var1,name_table$Freq)
 multiplot(gmovie,gname)
 
+##Populate the graph for range , the number of people falls in a range or
+#count of movie likes within range
+updated_name$group <- cut(updated_name$Freq, breaks = seq(0, max(updated_name$Freq) + 4, by = 3), include.lowest = T)
+
+ggplot(updated_name, aes(x = group,fill=group)) + geom_bar()

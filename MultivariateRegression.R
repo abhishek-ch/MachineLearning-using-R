@@ -128,7 +128,7 @@ confint(model1,level=0.99)
 newdata = data.frame(Murder=20.8, HS.Grad=80 , Frost=10)
 predict(model5, newdata, interval="confidence") 
 
-#So abobe output for confidence level says that Life.Exp will fall within the lwr and upr
+#So above output for confidence level says that Life.Exp will fall within the lwr and upr
 #range having 95% confidence level
 #So it can be used to predict the output
 

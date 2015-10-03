@@ -1,7 +1,7 @@
 #https://sites.google.com/site/miningtwitter/questions/sentiment/sentiment
 #http://stackoverflow.com/questions/15194436/is-there-any-other-package-other-than-sentiment-to-do-sentiment-analysis-in-r
 
-install.packages("C:/Users/achoudhary/Downloads/Rstem_0.4-1.zip", repos = NULL, type="source")
+install.packages("/Volumes/work/data/others/Rstem_0.4-1.zip", repos = NULL, type="source")
 install.packages("Rstem", repos = "http://www.omegahat.org/R", type="source")
 download.file("http://cran.r-project.org/src/contrib/Archive/sentiment/sentiment_0.2.tar.gz", "sentiment.tar.gz")
 install.packages("sentiment.tar.gz", repos=NULL, type="source")
@@ -27,10 +27,12 @@ apiSecret <- "CMYO2quM7fUzcVuvx8JjALiKjC9cnpXeJFqQLtv2pnECJCCZKz"
 access_token <- "69009666-XkI1bcxXtE4qXfOtbRYCgkiJJvpCfsmS0fq4OSq9d"
 access_token_secret <- "w89WtxJDAwakPToMqoFtpQYJIfht6YS3a8136hpcyW7eG"
 
-setup_twitter_oauth(apiKey,apiSecret,access_token,access_token_secret)
+#setup_twitter_oauth(apiKey,apiSecret,access_token,access_token_secret)
+setup_twitter_oauth("MIgAEnO0XHTPKdMv3qiGKr6nu","CMYO2quM7fUzcVuvx8JjALiKjC9cnpXeJFqQLtv2pnECJCCZKz")
 
+setup_twitter_oauth("pbeGqyMGAUhIbalLv3gxQjjPo","vrWao49o21nFky2mGoFa06jE7VUV7E4YsqNmAEaifSX7A1ZyTX")
 #fetch tweets with word
-trendword = searchTwitter("#MufflerMan", n=4000)
+trendword = searchTwitter("#flyhackfly", n=800)
 
 # get the text
 trendword = sapply(trendword, function(x) x$getText())
@@ -107,7 +109,7 @@ ggplot(sent_df, aes(x=emotion)) +
   geom_bar(aes(y=..count.., fill=emotion)) +
   scale_fill_brewer(palette="Dark2") +
   labs(x="Twitter Sentiments", y="number of tweets (4000) Latest") +
-  ggtitle("Tweets on #mufflerMan \n(classification by emotion)"
+  ggtitle("Tweets on #flyhackfly \n(classification by emotion)"
   )
 
 
@@ -117,7 +119,7 @@ ggplot(sent_df, aes(x=polarity)) +
   geom_bar(aes(y=..count.., fill=polarity)) +
   scale_fill_brewer(palette="RdGy") +
   labs(x="polarity categories", y="number of tweets(4000)") +
-  ggtitle("Sentiment Analysis of Tweets about #MufferMan\n(Kejriwal)")
+  ggtitle("Sentiment Analysis of Tweets about #flyhackfly")
 
 
 
@@ -133,7 +135,7 @@ for (i in 1:nemo)
   emo.docs[i] = paste(tmp, collapse=" ")
 }
 
-common <- read.csv("D:/Work/RWorkSpace/Git/common.csv",header=FALSE)
+common <- read.csv("/Volumes/work/project/github/machine-learning-R/common.csv",header=FALSE)
 # remove generic and custom stopwords
 my_stopwords <- c(stopwords('english'), common)
 

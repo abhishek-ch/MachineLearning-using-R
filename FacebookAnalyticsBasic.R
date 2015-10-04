@@ -58,7 +58,7 @@ library(RCurl)
 library(rjson)
 library(ggplot2)
 
-access_token = "CAAAASxJZCjyUBADUJeIx4NIKImTlnFmOGbaZAUbJ7iSeKPqseHzkuj97HJBIv0hLDzgmqWt0ZA9bBzLNv7ijL8clsgz4xxp8yz8Jju59qeZBLDDu1JEfnAsiuKsR6eyZA9w9LKil9y2T7mRYILnWi7rVeruaxCRj9rVl8XnyoiH7WfRaE9rEosJZANAoF6gZB0v16N1FuPmPpKHQM2QdBZBA"
+access_token = "CAACEdEose0cBAJBFSlrBLYXV6xeNiqOwUVox6Cbivf4EpIKA2DCYbLahf1NScd64dKiiwgWO511kmqmZBeroszZAiJeZCZAoHT8IkzayFomvfFwtczu46ULehVDmFwn5roLZBhp6R2soZCSBWvHcHohetbM0clNoFNmfDsooqnJTPrONmXRq8ZBXTWfr1iMw5mzsjeRQOIcRwZDZD"
 myFB = getUsers("me",token = access_token)
 myFriends = getFriends(access_token, simplify = FALSE)
 

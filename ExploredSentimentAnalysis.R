@@ -92,19 +92,19 @@ reqURL <- "https://api.twitter.com/oauth/request_token"
 accessURL <- "https://api.twitter.com/oauth/access_token"
 authURL <- "https://api.twitter.com/oauth/authorize"
 
-apiKey <-  "************************************"
-apiSecret <- "************************************"
-access_token <- "************************************"
-access_token_secret <- "************************************"
+apiKey <-  "MIgAEnO0XHTPKdMv3qiGKr6nu"
+apiSecret <- "CMYO2quM7fUzcVuvx8JjALiKjC9cnpXeJFqQLtv2pnECJCCZKz"
+access_token <- "69009666-XkI1bcxXtE4qXfOtbRYCgkiJJvpCfsmS0fq4OSq9d"
+access_token_secret <- "w89WtxJDAwakPToMqoFtpQYJIfht6YS3a8136hpcyW7eG"
 
-setup_twitter_oauth(apiKey,apiSecret,access_token,access_token_secret)
+#setup_twitter_oauth(apiKey,apiSecret,access_token,access_token_secret)
 
-
+setup_twitter_oauth("MIgAEnO0XHTPKdMv3qiGKr6nu","CMYO2quM7fUzcVuvx8JjALiKjC9cnpXeJFqQLtv2pnECJCCZKz")
 #tweets for phone
 
-iphone = searchTwitter("iphone", n=2000,lang="en")
-nexus6 = searchTwitter("nexus6", n=2000,lang="en")
-samsung = searchTwitter("Samsung Galaxy", n=2000,lang="en")
+iphone = searchTwitter("oneplus2", n=2000,lang="en")
+nexus6 = searchTwitter("iphone6s", n=2000,lang="en")
+samsung = searchTwitter("S6", n=2000,lang="en")
 
 #total tweets of each item
 totaltweets = c(length(iphone),length(nexus6),length(samsung))

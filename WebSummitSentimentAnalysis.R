@@ -32,7 +32,7 @@ setup_twitter_oauth("MIgAEnO0XHTPKdMv3qiGKr6nu","CMYO2quM7fUzcVuvx8JjALiKjC9cnpX
 
 setup_twitter_oauth("pbeGqyMGAUhIbalLv3gxQjjPo","vrWao49o21nFky2mGoFa06jE7VUV7E4YsqNmAEaifSX7A1ZyTX")
 #fetch tweets with word
-trendword = searchTwitter("#flyhackfly", n=800)
+trendword = searchTwitter("#flyhackfly", n=2000)
 
 # get the text
 trendword = sapply(trendword, function(x) x$getText())

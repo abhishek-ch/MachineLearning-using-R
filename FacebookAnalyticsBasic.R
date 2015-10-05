@@ -58,7 +58,7 @@ library(RCurl)
 library(rjson)
 library(ggplot2)
 
-access_token = "CAACEdEose0cBAJBFSlrBLYXV6xeNiqOwUVox6Cbivf4EpIKA2DCYbLahf1NScd64dKiiwgWO511kmqmZBeroszZAiJeZCZAoHT8IkzayFomvfFwtczu46ULehVDmFwn5roLZBhp6R2soZCSBWvHcHohetbM0clNoFNmfDsooqnJTPrONmXRq8ZBXTWfr1iMw5mzsjeRQOIcRwZDZD"
+access_token = "facebook access token inside graph api"
 myFB = getUsers("me",token = access_token)
 myFriends = getFriends(access_token, simplify = FALSE)
 

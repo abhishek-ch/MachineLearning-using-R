@@ -1,5 +1,5 @@
 # go to 'https://developers.facebook.com/tools/explorer' to get your access token
-access_token <- "CAACEdEose0cBAJKozHiNcJs3iYTCkxx7zltNuWxObsQZBLyCrDIhybYqJVJcwmYn0OmM77MGgmdJepI2ZCtK7Jtz9DTRqqmw7c0KGGk17NGFrcW0MvXBtyWWPVhGq4sBINykZBZBh7DwmoC9iPuHTSJyCWfAjXQYOzUI4nnNu7FV6N9JQ2pwVnxjGcI3aQ1ffZB2CZCZAqEMNYI0kb6A1y9"
+access_token <- "facebook graph api access token"
 
 require(RCurl)
 require(rjson)

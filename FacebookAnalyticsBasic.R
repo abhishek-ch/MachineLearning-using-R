@@ -150,7 +150,7 @@ facebook <-  function( path = "me", access_token, options){
   fromJSON( data )
 }
 
-access_token="CAACEdEose0cBANokcx2EvU35isXQowl9tvQZB29nXfnCqAtQA00IBvfMna3V0qzXke09sZB7ZAihpwzsngSf4slRBnrmGUy2DJF8tEZBszYihu4ZB6zxTZC1LLjOa6BPPQH7TwSZB03iPXPjAZC8qFI7JUz1qq5i1DScmXZCZAEM8Aqexlm41YmFbUtuxPZCLFvND5bLWn6hZAFZADyYddHiZBmrGG"
+access_token=""
 fbactivities <- facebook(path="me/friends" , access_token=access_token)
 
 

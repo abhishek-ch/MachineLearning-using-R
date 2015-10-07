@@ -1,45 +1,25 @@
-#https://sites.google.com/site/miningtwitter/questions/sentiment/sentiment
-#http://stackoverflow.com/questions/15194436/is-there-any-other-package-other-than-sentiment-to-do-sentiment-analysis-in-r
-
-options(download.file.method = "wininet")
-install.packages("/Volumes/work/data/others/Rstem_0.4-1.zip", repos = NULL, type="source")
-install.packages("Rstem", repos = "http://www.omegahat.org/R", type="source")
-download.file("http://cran.r-project.org/src/contrib/Archive/sentiment/sentiment_0.2.tar.gz", "sentiment.tar.gz")
-install.packages("sentiment.tar.gz", repos=NULL, type="source")
-install.packages("devtools")
-library(devtools)
-library(sentiment)
-install.packages(c("rjson", "bit64", "httr"))
-library(httr)
-install_github("geoffjentry/twitteR", username="geoffjentry")
-
 library(twitteR)
-library(plyr)
-library(ggplot2)
+library(tm)
 library(wordcloud)
 library(RColorBrewer)
-library(stringr)
+library(devtools)
+install.packages(c("rjson", "bit64", "httr"))
+library("devtools")
+install_github("geoffjentry/twitteR", username="geoffjentry")
+library(httpuv)
+download.file("http://cran.r-project.org/src/contrib/Archive/sentiment/sentiment_0.2.tar.gz", "sentiment.tar.gz")
+install.packages("sentiment.tar.gz", repos=NULL, type="source")
+library(sentiment)
+library(ggplot2)
 
-
-reqURL <- "https://api.twitter.com/oauth/request_token"
-accessURL <- "https://api.twitter.com/oauth/access_token"
-authURL <- "https://api.twitter.com/oauth/authorize"
-
-apiKey <-  ""
-apiSecret <- ""
-access_token <- ""
-access_token_secret <- ""
-
-#setup_twitter_oauth(apiKey,apiSecret,access_token,access_token_secret)
 setup_twitter_oauth("MIgAEnO0XHTPKdMv3qiGKr6nu","CMYO2quM7fUzcVuvx8JjALiKjC9cnpXeJFqQLtv2pnECJCCZKz")
 
+mach_tweets = searchTwitter("startupirl", n=1000, lang="en")
 
-#fetch tweets with word
-trendword = searchTwitter("#flyhackfly", n=2000)
+mach_text = sapply(mach_tweets, function(x) x$getText())
 
-# get the text
-trendword = sapply(trendword, function(x) x$getText())
-#Avoid the non utf-8 characters
+trendword = sapply(mach_tweets, function(x) x$getText())
+
 trendword=str_replace_all(trendword,"[^[:graph:]]", " ") 
 
 
@@ -59,6 +39,9 @@ trendword = gsub("http\\w+", "", trendword)
 # remove unnecessary spaces
 trendword = gsub("[ \t]{2,}", "", trendword)
 trendword = gsub("^\\s+|\\s+$", "", trendword)
+
+
+
 
 # define "tolower error handling" function 
 try.error = function(x)
@@ -88,7 +71,7 @@ class_emo = classify_emotion(trendword, algorithm="bayes", prior=1.0)
 # get emotion best fit
 emotion = class_emo[,7]
 # substitute NA's by "unknown"
-emotion[is.na(emotion)] = "unknown"
+emotion[is.na(emotion)] = "Confused"
 
 # classify polarity
 class_pol = classify_polarity(trendword, algorithm="bayes")
@@ -111,8 +94,8 @@ sent_df = within(sent_df,
 ggplot(sent_df, aes(x=emotion)) +
   geom_bar(aes(y=..count.., fill=emotion)) +
   scale_fill_brewer(palette="Dark2") +
-  labs(x="Twitter Sentiments", y="number of tweets (4000) Latest") +
-  ggtitle("Tweets on #flyhackfly \n(classification by emotion)"
+  labs(x="Twitter Sentiments", y="number of tweets (2000) Latest") +
+  ggtitle("Tweets on #startupirl \n(classification by emotion)"
   )
 
 
@@ -121,8 +104,8 @@ ggplot(sent_df, aes(x=emotion)) +
 ggplot(sent_df, aes(x=polarity)) +
   geom_bar(aes(y=..count.., fill=polarity)) +
   scale_fill_brewer(palette="RdGy") +
-  labs(x="polarity categories", y="number of tweets(4000)") +
-  ggtitle("Sentiment Analysis of Tweets about #flyhackfly")
+  labs(x="polarity categories", y="number of tweets(2000)") +
+  ggtitle("Sentiment Analysis of Tweets about #startupirl")
 
 
 
@@ -138,7 +121,7 @@ for (i in 1:nemo)
   emo.docs[i] = paste(tmp, collapse=" ")
 }
 
-common <- read.csv("/Volumes/work/project/github/machine-learning-R/common.csv",header=FALSE)
+common <- read.csv("C:/Users/achoudhary/Desktop/ABC/common.csv",header=FALSE)
 # remove generic and custom stopwords
 my_stopwords <- c(stopwords('english'), common)
 
@@ -157,31 +140,43 @@ comparison.cloud(tdm, colors = brewer.pal(nemo, "Dark2"),
 dev.off()
 
 
-#######################################retweets###########################################
-#http://stackoverflow.com/questions/13649019/with-r-split-time-series-data-into-time-intervals-say-an-hour-and-then-plot-t
-#http://stackoverflow.com/questions/10317470/simple-analog-for-plotting-a-line-from-a-table-object-in-ggplot2
-#http://blog.ouseful.info/2012/02/17/visualising-twitter-user-timeline-activity-in-r/
-#find number of retweets
-library(ggplot2)
-
-rdmTweets <- searchTwitter('#trendword', n=500)
-#Create a dataframe based around the results
-df <- do.call("rbind", lapply(trendword, as.data.frame))
-#Here are the columns
-names(df)
-#And some example content
-head(df,3)
 
 
-counts=table(df$retweetCount)
-barplot(counts)
-dev.off()
-#find retweets maximum than 30
-retweetSubset =subset(df,retweetCount > 50)
-qplot(screenName,  data=retweetSubset, geom="bar",weight=retweetCount,fill=screenName)
 
 
-#We can also generate barplots showing the distribution of tweet count over time:
-MyDatesTable <- table(cut(df$created, breaks="10 mins"))
-ggplot(df,aes(x=cut(df$created, breaks="4 mins")))+geom_bar(aes(y = (..count..)))
 
+
+
+
+
+
+##############################
+
+# create a corpus
+mach_corpus = Corpus(VectorSource(trendword))
+
+# create document term matrix applying some transformations
+tdm = TermDocumentMatrix(mach_corpus,
+                         control = list(removePunctuation = TRUE,
+                                        stopwords = c("Startuo", "irl", stopwords("english")),
+                                        removeNumbers = TRUE, tolower = TRUE))
+
+
+
+
+
+
+
+# define tdm as matrix
+m = as.matrix(tdm)
+# get word counts in decreasing order
+word_freqs = sort(rowSums(m), decreasing=TRUE) 
+# create a data frame with words and their frequencies
+dm = data.frame(word=names(word_freqs), freq=word_freqs)
+
+# plot wordcloud
+wordcloud(dm$word, dm$freq, random.order=FALSE, colors=brewer.pal(2, "Dark2"))
+
+# save the image in png format
+png("C:/tmp/startup.png", width=12, height=8, units="in", res=300)
+wordcloud(dm$word, dm$freq, random.order=FALSE, colors=brewer.pal(8, "Dark2"))

@@ -39,7 +39,7 @@ View(value)
 View(unique(value))
 
 #Filter With Any Movie
-filter(value,User =="Akshi*")
+filter(value,User =="Shaibal*")
 
 movie_table = as.data.frame(table(value$Movie))
 updated <- movie_table[movie_table$Freq>25,]
